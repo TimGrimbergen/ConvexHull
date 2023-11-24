@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 def xyz_to_hex(c):
     cmap = {0 : "0", 1 : "1", 2 : "2", 3 : "3", 4 : "4", 5 : "5", 6 : "6", 7 : "7", 8 : "8", 9 : "9",
             10 : "A", 11 : "B", 12 : "C", 13 : "D", 14 : "E", 15 : "F"}
@@ -35,8 +34,13 @@ def sort_helper(p1, p2):
     if p1 == p2: return (10000,0) # we want the initial point (p1) to be last
     angle = compute_angle(p1, p2)
     dist = abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
-    return angle, -dist
+    return -angle, -dist
 
+def right_turn(stack):
+    if len(stack) < 3: return True
+    p,q,s = stack[-3], stack[-2], stack[-1]
+    cross_z = (p[0] - q[0])*(s[1] - q[1]) - (p[1] - q[1])*(s[0] - q[0])
+    return True if cross_z > 0 else False
 
 def graham_scan(points):
     '''
@@ -51,13 +55,31 @@ def graham_scan(points):
 
     # sort points in order of polar angle with p_start. If several points with the same angle, sort by distance to p_start
     points.sort(key = lambda p : sort_helper(p_start, p))
+    # return p_start, points # debug
 
-    return p_start, points
     stack = []
+    for i, p in enumerate(points):
+        while len(stack) > 1 and not right_turn(stack + [p]):
+            stack.pop()
+        stack.append(p)
+    
+    return stack
 
+def test_method(points, method=graham_scan):
+    hull = graham_scan(points)
+    hull_colors = [xyz_to_hex((round(255 * i / len(hull)),0,0)) for i in range(len(hull))]
+    print(hull)
+    plt.figure()
+    for p in points:
+        plt.scatter(p[0], p[1], c='blue', s=3)
+    for i,p in enumerate(hull):
+        plt.scatter(p[0], p[1], color=hull_colors[i], s=10) # overwrite previous point
+    plt.show() 
 
+'''#test sorting
 if __name__ == '__main__':
-    points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
+    #points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
+    points = [(0,0), (1,1), (2,2), (3,3)]
     colors = [( 0, 0, round(255 * x / len(points)) ) for x in range(len(points))]
     colors = [xyz_to_hex(c) for c in colors]
 
@@ -71,3 +93,11 @@ if __name__ == '__main__':
     for i in range(len(sorted_points)):
         plt.scatter(sorted_points[i][0], sorted_points[i][1], color=colors[i])
     plt.show()
+'''
+
+if __name__ == '__main__':
+    points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
+    test_method(points, graham_scan)
+
+    points = [(0,0), (1, 0), (2, 0), (3, 0), (3, 1), (3,2), (3,3), (3, 4), (1,4), (-1, 4), (-1, 3), (-1, 2), (-1,0)]
+    test_method(points, graham_scan)
