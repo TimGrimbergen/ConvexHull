@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def xyz_to_hex(c):
     cmap = {0 : "0", 1 : "1", 2 : "2", 3 : "3", 4 : "4", 5 : "5", 6 : "6", 7 : "7", 8 : "8", 9 : "9",
             10 : "A", 11 : "B", 12 : "C", 13 : "D", 14 : "E", 15 : "F"}
@@ -9,6 +10,7 @@ def xyz_to_hex(c):
     z = "".join(cmap[s] for s in divmod(c[2], 16))
     return "#" + x + y + z
 
+
 def cos_dot(p1, p2):
     # calculates the cosine of the angle with the dot-product formula, assumes p1 lies to the left of p2
 
@@ -16,6 +18,7 @@ def cos_dot(p1, p2):
     denominator = np.sqrt( (p2[0] - p1[0])**2 ) * np.sqrt( (p2[0] - p1[0])**2 + (p2[1] - p1[1])**2 )
 
     return numerator / denominator
+
 
 def compute_angle(p1, p2): # returns cosine of angle
     if p1[1] == p2[1]:
@@ -28,7 +31,7 @@ def compute_angle(p1, p2): # returns cosine of angle
         return 0
     else:
         return cos_dot(p1, (p2[0] + 2*(p1[0] - p2[0]), p2[1]))
-    
+
 
 def sort_helper(p1, p2):
     if p1 == p2: return (10000,0) # we want the initial point (p1) to be last
@@ -36,17 +39,19 @@ def sort_helper(p1, p2):
     dist = abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
     return -angle, -dist
 
+
 def right_turn(stack):
     if len(stack) < 3: return True
     p,q,s = stack[-3], stack[-2], stack[-1]
     cross_z = (p[0] - q[0])*(s[1] - q[1]) - (p[1] - q[1])*(s[0] - q[0])
     return True if cross_z > 0 else False
 
+
 def graham_scan(points):
     '''
         Input:
             - points [(float, float)] : list of points to calculate the convex hull of.
-        
+
         Output:
             - points of the convex hull sorted in clockwise order
     '''
@@ -62,8 +67,9 @@ def graham_scan(points):
         while len(stack) > 1 and not right_turn(stack + [p]):
             stack.pop()
         stack.append(p)
-    
+
     return stack
+
 
 def test_method(points, method=graham_scan):
     hull = graham_scan(points)
@@ -74,26 +80,27 @@ def test_method(points, method=graham_scan):
         plt.scatter(p[0], p[1], c='blue', s=3)
     for i,p in enumerate(hull):
         plt.scatter(p[0], p[1], color=hull_colors[i], s=10) # overwrite previous point
-    plt.show() 
-
-'''#test sorting
-if __name__ == '__main__':
-    #points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
-    points = [(0,0), (1,1), (2,2), (3,3)]
-    colors = [( 0, 0, round(255 * x / len(points)) ) for x in range(len(points))]
-    colors = [xyz_to_hex(c) for c in colors]
-
-    plt.figure(1)
-    for i in range(len(points)):
-        plt.scatter(points[i][0], points[i][1], color=colors[i])
     plt.show()
 
-    sorted_points = graham_scan(points)[1]
-    plt.figure(2)
-    for i in range(len(sorted_points)):
-        plt.scatter(sorted_points[i][0], sorted_points[i][1], color=colors[i])
-    plt.show()
-'''
+
+# # test sorting
+# if __name__ == '__main__':
+#     #points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
+#     points = [(0,0), (1,1), (2,2), (3,3)]
+#     colors = [( 0, 0, round(255 * x / len(points)) ) for x in range(len(points))]
+#     colors = [xyz_to_hex(c) for c in colors]
+
+#     plt.figure(1)
+#     for i in range(len(points)):
+#         plt.scatter(points[i][0], points[i][1], color=colors[i])
+#     plt.show()
+
+#     sorted_points = graham_scan(points)[1]
+#     plt.figure(2)
+#     for i in range(len(sorted_points)):
+#         plt.scatter(sorted_points[i][0], sorted_points[i][1], color=colors[i])
+#     plt.show()
+
 
 if __name__ == '__main__':
     points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
