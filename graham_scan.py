@@ -1,5 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
+
+from show_hull import show_hull
+from random_convex_hull import random_convex_hull_with_points
 
 
 def xyz_to_hex(c):
@@ -56,7 +58,7 @@ def graham_scan(points):
             - points of the convex hull sorted in clockwise order
     '''
     # find lowest point, if several lowest points, pick the most left one
-    p_start = sorted(points, key = lambda p : (p[1], p[0]))[0]
+    p_start = min(points, key = lambda p : (p[1], p[0]))
 
     # sort points in order of polar angle with p_start. If several points with the same angle, sort by distance to p_start
     points.sort(key = lambda p : sort_helper(p_start, p))
@@ -69,18 +71,6 @@ def graham_scan(points):
         stack.append(p)
 
     return stack
-
-
-def test_method(points, method=graham_scan):
-    hull = graham_scan(points)
-    hull_colors = [xyz_to_hex((round(255 * i / len(hull)),0,0)) for i in range(len(hull))]
-    print(hull)
-    plt.figure()
-    for p in points:
-        plt.scatter(p[0], p[1], c='blue', s=3)
-    for i,p in enumerate(hull):
-        plt.scatter(p[0], p[1], color=hull_colors[i], s=10) # overwrite previous point
-    plt.show()
 
 
 # # test sorting
@@ -101,10 +91,12 @@ def test_method(points, method=graham_scan):
 #         plt.scatter(sorted_points[i][0], sorted_points[i][1], color=colors[i])
 #     plt.show()
 
+def main():
+    n, m = 10, 100
+    points = random_convex_hull_with_points(n, m).points.tolist()
+    hull = graham_scan(points)
+    show_hull(np.array(points), np.array(hull))
+
 
 if __name__ == '__main__':
-    points = [(np.random.uniform(-10, 10), np.random.uniform(-9, 10)) for _ in range(100)] + [(0, -10)]
-    test_method(points, graham_scan)
-
-    points = [(0,0), (1, 0), (2, 0), (3, 0), (3, 1), (3,2), (3,3), (3, 4), (1,4), (-1, 4), (-1, 3), (-1, 2), (-1,0)]
-    test_method(points, graham_scan)
+    main()
