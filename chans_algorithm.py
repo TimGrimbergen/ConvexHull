@@ -64,7 +64,7 @@ def chan(points: list[tuple], m=None):
     hull.append(point_on_hull)
     #illegal = set() # maintain a set that stores the points already on the convex hull
 
-    for _ in range(m-1): # we need to add m-1 more points to the hull
+    while True: # we need to add m-1 more points to the hull
 
         cur_hull, cur_ind = look_up[point_on_hull]
         #illegal.add(point_on_hull)
@@ -74,43 +74,47 @@ def chan(points: list[tuple], m=None):
         # Since the subhulls are stored in clockwise sorted order, we can perform binary search to do this.
         extreme_points = []
         for i in range(len(hulls)):
-            if i == cur_hull: continue # current group is handled later
-
-            ''' todo: fix binary search
+            if i == cur_hull: continue # current hull is handled later
+            
             l, r = 0, len(hulls[i]) - 1 # handle cases where r <= 2 separately. Also, what if we encounter the current point_on_hull
 
-            while l < r:
+            while True:
                 m = l + (r-l)//2
-                if hulls[i][m] in illegal: m_ = m+1
 
                 # check if current m is correct, i.e., all points of the subhull must lie to the left of the line through 
                 # the previous point on the hull and the new candidate. Note, if the two points adjacent to the candidate point
                 # both lie to the left, we are done.
-                if left_of(point_on_hull, hulls[i][m], hulls[i][m-1]) and left_of(point_on_hull, hulls[i][m], hulls[i][m+1]):
+                if (left_of(point_on_hull, hulls[i][m], hulls[i][m-1]) and left_of(point_on_hull, hulls[i][m], hulls[i][(m+1)%len(hulls[i])])) or l == r:
                     break
 
-                elif not left_of(point_on_hull, hulls[i][m], hulls[i][m-1]): #check whether this makes sense
+                elif left_of(point_on_hull, hulls[i][m], hulls[i][(m+1)%len(hulls[i])]): #check whether this makes sense
                     r = m
                 else: #check whether this makes sense
                     l = m + 1
 
             extreme_points.append(hulls[i][m])
-            '''
+            
 
             # with linear scan
-            for j in range(len(hulls[i])):
-                if left_of(point_on_hull, hulls[i][j], hulls[i][j-1]) and left_of(point_on_hull, hulls[i][j], hulls[i][(j+1)%len(hulls[i])]):
-                    extreme_points.append(hulls[i][j])
-                    break
+            #for j in range(len(hulls[i])):
+            #    if left_of(point_on_hull, hulls[i][j], hulls[i][j-1]) and left_of(point_on_hull, hulls[i][j], hulls[i][(j+1)%len(hulls[i])]):
+            #        extreme_points.append(hulls[i][j])
+            #        break
 
         # Now scan the extreme points, and pick the one that is most extreme.
         temp = hulls[cur_hull][cur_ind-1]
-        for j in range(len(extreme_points)):
-            if left_of(point_on_hull, extreme_points[j], temp):
-                temp = extreme_points[j]
-
+        for p in extreme_points:
+            if left_of(point_on_hull, p, temp):
+                temp = p
+                
         point_on_hull = temp
+        if point_on_hull == hull[0]: break
+
         hull.append(point_on_hull)
+
+        if len(hull) > n:
+            print("something definitely went wrong")
+            break
 
     print(len(hull))
     return hull

@@ -96,6 +96,7 @@ def main():
     points = random_convex_hull_with_points(n, m).points.tolist()
     hull = graham_scan(points)
     show_hull(np.array(points), np.array(hull))
+    # print(hull)
 
 
 if __name__ == '__main__':
