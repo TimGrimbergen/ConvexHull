@@ -65,7 +65,7 @@ def chan(points: list[tuple], m=None):
     #illegal = set() # maintain a set that stores the points already on the convex hull
 
     while True: # we need to add m-1 more points to the hull
-
+        #print(point_on_hull)
         cur_hull, cur_ind = look_up[point_on_hull]
         #illegal.add(point_on_hull)
 
@@ -86,12 +86,23 @@ def chan(points: list[tuple], m=None):
                 # both lie to the left, we are done.
                 if (left_of(point_on_hull, hulls[i][m], hulls[i][m-1]) and left_of(point_on_hull, hulls[i][m], hulls[i][(m+1)%len(hulls[i])])) or l == r:
                     break
-
-                elif left_of(point_on_hull, hulls[i][m], hulls[i][(m+1)%len(hulls[i])]): #check whether this makes sense
-                    r = m
-                else: #check whether this makes sense
+                
+                #this does not make sense
+                elif not left_of(point_on_hull, hulls[i][m], hulls[i][(m+1)%len(hulls[i])]): #check whether this makes sense
                     l = m + 1
+                else: #check whether this makes sense
+                    r = m
+                
+                # how to decide whether to replace l by m + 1 or r by m?
+                # we want that the answer is one of the new points l..r
+                # either all points from l..m or all points from m+1..r are not valid
+                # for some reason the extra check on line 102 makes it work
 
+            # check if index 0 is the correct point, if yes select this point
+            if left_of(point_on_hull, hulls[i][0], hulls[i][1]) and left_of(point_on_hull, hulls[i][0], hulls[i][-1]):
+                m = 0
+
+            print(look_up[hulls[i][m]])
             extreme_points.append(hulls[i][m])
             
 
@@ -106,7 +117,7 @@ def chan(points: list[tuple], m=None):
         for p in extreme_points:
             if left_of(point_on_hull, p, temp):
                 temp = p
-                
+
         point_on_hull = temp
         if point_on_hull == hull[0]: break
 
