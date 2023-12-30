@@ -40,6 +40,9 @@ def dist(a: tuple, b: tuple) -> float:
 def left_tangent(point: tuple, hull: list[tuple]) -> tuple:
     """
     Find the left tangent of a point and a convex hull.
+    Based on:
+    https://github.com/ypranay/Convex-Hull/blob/master/ChansAlgorithmForConvexHull.cpp
+    line 95-115
     """
     n = len(hull)
     l, r = 0, n
