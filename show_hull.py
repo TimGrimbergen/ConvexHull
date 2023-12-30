@@ -10,7 +10,7 @@ def show_hull(points: np.ndarray, hull: np.ndarray) -> None:
     hull = np.vstack((hull, hull[0]))
     ax.plot(points[:,0], points[:,1], 'o', ms=6)
     ax.plot(hull[:,0], hull[:,1], 'o-', ms=7)
-    plt.savefig('figs/hull')
+    plt.savefig(f"figs/hull")
 
 def show_hulls(groups: [np.ndarray], hulls: [np.ndarray]) -> None:
     """
@@ -22,4 +22,4 @@ def show_hulls(groups: [np.ndarray], hulls: [np.ndarray]) -> None:
         hull = np.vstack((hulls[i], hulls[i][0]))
         ax.plot(groups[i][:,0], groups[i][:,1], 'o', ms=6, c = colors[i%len(colors)])
         ax.plot(hull[:,0], hull[:,1], 'o-', ms=7, c = colors[i%len(colors)])
-    plt.savefig('figs/subhulls')
+    plt.savefig(f"figs/subhulls{len(hulls)}")

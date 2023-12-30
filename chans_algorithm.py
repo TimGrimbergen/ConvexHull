@@ -18,33 +18,45 @@ def left_of(a: tuple, b: tuple, c: tuple) -> bool:
 
 def binary_search_hull(hull, point):
     """
-    Finds the vertex of a convex hull such that all other points of the hull lie to the left of the directed line from point to that vertex 
+    Finds the vertex of a convex hull such that all other points of the hull lie to the right of the directed line from point to that vertex 
     """
     l, r = 0, len(hull) - 1
 
     if r == 0: return hull[0]
-    if r == 1: return hull[0] if left_of(point, hull[0], hull[1]) else hull[1]
+    if r == 1: return hull[1] if left_of(point, hull[0], hull[1])==1 else hull[0]
 
     #startLeftPrev = left_of(point, hull[l], hull[r])
     #startLeftNext = left_of(point, hull[l], hull[l+1])
 
-    while l < r:
+    while l <= r: #should be more sophisticated
         m = l + (r-l)//2
-        candidate = hull[m]
-        prevP = hull[m-1]
-        nextP = hull[(m+1)%len(hull)]
-        leftMid = left_of(point, hull[l], candidate) # checks if candidate is on the left or right of the left index
-        leftPrev = left_of(point, candidate, prevP) # checks if prev is to the left of candidate
-        leftNext = left_of(point, candidate, nextP) # cehck if next is to the left of candidate
 
-        if leftPrev == 1 and leftNext == 1:
-            break
+        if left_of(point, hull[m], hull[m-1]) == -1 and left_of(point, hull[m], hull[(m+1)%(len(hull))]) == -1:
+            return hull[m]
 
-        elif leftMid <= 0:
-            l = m + 1
+        if l == r:
+            return hull[m]
         
-        else:
+        #if l == r: #weird case...
+        #    # check if it should be the left or right neighbor of the current index
+        #    if left_of(point, hull[(l+1)%(len(hull))], hull[l]) == -1 and left_of(point, hull[(l+1)%(len(hull))], hull[(l+2)%(len(hull))]) == -1:
+        #        return hull[(l+1)%(len(hull))]
+        #    elif left_of(point, hull[l-1], hull[l-2]) == -1 and left_of(point, hull[l-1], hull[(l)%(len(hull))]) == -1:
+        #        return hull[l-1]
+        #    else:
+        #        raise RuntimeError(f"Binary search terminated at {l}, but it is not the correct point and neither are its neighbors")
+
+        if left_of(point, hull[(m+1)%len(hull)], hull[m]) == 1 and left_of(point, hull[r], hull[m]) == 1:
             r = m
+        elif left_of(point, hull[r], hull[m]) == -1:
+            if left_of(point, hull[r], hull[l]) == -1:
+                l = m + 1
+            else:
+                r = m
+        else:
+            l = m + 1
+    
+    return hull[m]
 
 
 
@@ -115,8 +127,10 @@ def chan(points: list[tuple], m=None):
         # Compute the convex hulls of the groups with Graham's scan
         hulls = []
         for i in range(len(groups)):
-            hulls.append(graham_scan(groups[i]))
-        
+            cur_hull = graham_scan(groups[i])
+            hulls.append(cur_hull)
+            
+            
         # Create look_up table for every point
         look_up = {}
         for i in range(len(hulls)):
@@ -144,22 +158,22 @@ def chan(points: list[tuple], m=None):
             for i in range(len(hulls)):
                 if i == cur_hull: continue #handled separately
 
-                #cur_extreme_point = binary_search_hull(hulls[i], point_on_hull)
+                cur_extreme_point = binary_search_hull(hulls[i], point_on_hull) # this does not work
 
                 #print(look_up[cur_extreme_point])
-                #extreme_points.append(cur_extreme_point)
+                extreme_points.append(cur_extreme_point)
                 
-                #with linear scan
+                #with linear scan (this works)
 
-                if len(hulls[i]) == 1: extreme_points.append(hulls[i][0])
-                if len(hulls[i]) == 2: extreme_points.append(hulls[i][1]) if left_of(point_on_hull, hulls[i][1], hulls[i][0]) == -1 else extreme_points.append(hulls[i][0])
+                #if len(hulls[i]) == 1: extreme_points.append(hulls[i][0])
+                #if len(hulls[i]) == 2: extreme_points.append(hulls[i][1]) if left_of(point_on_hull, hulls[i][1], hulls[i][0]) == -1 else extreme_points.append(hulls[i][0])
 
-                for j in range(len(hulls[i])):
-                    if left_of(point_on_hull, hulls[i][j], hulls[i][j-1]) == -1 and left_of(point_on_hull, hulls[i][j], hulls[i][(j+1)%len(hulls[i])]) == -1:
-                        extreme_points.append(hulls[i][j])
-                        break
+                #for j in range(len(hulls[i])):
+                #    if left_of(point_on_hull, hulls[i][j], hulls[i][j-1]) == -1 and left_of(point_on_hull, hulls[i][j], hulls[i][(j+1)%len(hulls[i])]) == -1:
+                #        extreme_points.append(hulls[i][j])
+                #        break
 
-            # Now scan the extreme points, and pick the one that is most extreme (i.e. most clockwise).
+            # Now scan the extreme points, and pick the one that is most extreme (i.e. most "clockwise").
             temp = hulls[cur_hull][(cur_ind+1)%len(hulls[cur_hull])]
             for p in extreme_points:
                 if left_of(point_on_hull, p, temp) <= 0:
@@ -180,7 +194,7 @@ def chan(points: list[tuple], m=None):
 
 
 def main():
-    n, m = 80, 400
+    n, m = 3, 100
     points = random_convex_hull_with_points(n, m).points.tolist()
     points = [tuple(points[i]) for i in range(n+m)]
     hull = chan(points, None)
