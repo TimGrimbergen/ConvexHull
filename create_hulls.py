@@ -41,8 +41,11 @@ def load_hulls(folder, n = None, m = None):
     return hulls
 
 if __name__ == '__main__':
-    #create_hulls(5, 5, 15, save_folder)
-    #create_hulls(5, 10, 30, save_folder)
-    hulls = load_hulls(save_folder)
-    print(hulls[(5,15)]["980458186"]['hull'])
+    S_vals = [20, 40, 60, 80, 100, 200, 300, 400, 500]
+    n = 20
+    for S in S_vals:
+        create_hulls(5, n, S-n, save_folder)
+    
+    #hulls = load_hulls(save_folder)
+    #print(hulls[(5,15)]["980458186"]['hull'])
 
