@@ -1,4 +1,4 @@
-from show_hull import show_hull
+from plot_hull import plot_hull
 from random_convex_hull import random_convex_hull_with_points
 
 import numpy as np
@@ -50,7 +50,7 @@ def main():
     n, m = 10, 100
     points = random_convex_hull_with_points(n, m).points.tolist()
     hull = gift_wrapping(points)
-    show_hull(np.array(points), np.array(hull))
+    plot_hull(np.array(points), np.array(hull))
 
 
 if __name__ == '__main__':

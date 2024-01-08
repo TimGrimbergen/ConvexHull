@@ -4,7 +4,7 @@ https://www.cs.umd.edu/~patras/patra2012_convexhull_report.pdf
 """
 from graham_scan import graham_scan
 from random_convex_hull import random_convex_hull
-from show_hull import show_hull
+from plot_hull import plot_hull
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -82,7 +82,8 @@ def main():
     hull = random_convex_hull(n).points.tolist()
     point = (0, 1)
     plt.plot(*np.array([point, left_tangent(point, hull)]).T, 'r-o')
-    show_hull(np.array(hull), np.array(hull))
+    plot_hull(np.array(hull), np.array(hull))
+    plt.show()
 
 
 if __name__ == '__main__':

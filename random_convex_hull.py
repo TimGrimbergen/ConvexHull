@@ -7,7 +7,7 @@ def random_convex_hull(n: int, rng=None) -> ConvexHull:
     """
     Generate random convex hull with n points on the hull.
     """
-    assert n >= 3, 'n must be greater than or equal to 3'
+    assert n >= 3, 'n must be greater than or equal to 2'
     rng = np.random.default_rng() if rng is None else rng
 
     # Generate 2 sets of sorted random points
