@@ -4,7 +4,20 @@ import os
 
 from random_convex_hull import random_convex_hull_with_points
 
-save_folder = "./hulls"
+def create_special_hull(points, hull, save_folder):
+    n = len(hull)
+    m = len(points) - n
+
+    try:
+        os.mkdir(f"{save_folder}/{n}_{m}")
+        print(f"Saving hulls to existing directory: {save_folder}/{n}_{m}")
+    except:
+        print(f"Saving hulls to new directory: {save_folder}/{n}_{m}")
+
+    id = random.randint(100_000_000, 999_999_990)
+    np.savetxt(f"{save_folder}/{n}_{m}/points_{id}", points)
+    np.savetxt(f"{save_folder}/{n}_{m}/hull_{id}", hull)
+
 
 def create_hulls(N, n, m, save_folder):
     try:
@@ -41,11 +54,23 @@ def load_hulls(folder, n = None, m = None):
     return hulls
 
 if __name__ == '__main__':
-    S_vals = [20, 40, 60, 80, 100, 200, 300, 400, 500]
-    n = 20
+    '''
+    save_folder = "./hulls3"
+    S_vals = [100,200,500,1000,2000,5000,10000,20000,50000,100000,200000]
+    #n_vals = [10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000, 200000, 400000, 490000, 499500]
+    n = 100
+    #S = 500000
     for S in S_vals:
-        create_hulls(5, n, S-n, save_folder)
+        create_hulls(10, n, S-n, save_folder)
+    #for n in n_vals:
+    #    create_hulls(3, n, S-n, save_folder)
     
     #hulls = load_hulls(save_folder)
     #print(hulls[(5,15)]["980458186"]['hull'])
+    '''
+    points = [(0, 0), (1,0), (0.1, 0.1), (0.5, 0.5), (0.3, 0.3), (1, 0.5), (1, 0.3), (0.2, 0), (0.6, 0), 
+              (1,1)]
+    hull = [(0, 0), (1, 1), (1, 0)]
+
+    create_special_hull(points, hull, "./special_hulls")
 

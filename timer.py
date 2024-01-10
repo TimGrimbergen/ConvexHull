@@ -1,4 +1,4 @@
-import time
+from time import perf_counter
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -20,14 +20,14 @@ def timer(algorithms, folder):
 
     for (n,m) in test_hulls:
         for alg in algorithms:
+            algorithm = select_algorithm(alg)
             result[alg][(n,m)] = [] # store generation times of each hull in a list
             for id in test_hulls[(n,m)]:
                 points = [tuple(x) for x in test_hulls[(n,m)][id]['points'].tolist()]
-                algorithm = select_algorithm(alg)
-                t_start = time.time()
+                t_start = perf_counter()
                 algorithm(points)
-                t_end = time.time()
-                result[alg][(n,m)].append(t_end-t_start)
+                t_end = perf_counter()
+                result[alg][(n,m)].append(t_end - t_start)
 
     return result
 
@@ -49,25 +49,30 @@ def plot_time_results(result, algorithms, n = None, S = None):
         plt.figure()
         for alg in algorithms:
             plt.scatter(alg_xy[alg][0], alg_xy[alg][1], label=alg)
+        plt.xscale('log')
+        plt.yscale('log')
         plt.legend()
-        plt.show()
+        plt.savefig(f"figs/timing_results/n_{n}")
     elif S:
-        n_vals = []
-        time_vals = []
-        for (n, m) in result:
-            if n + m == S:
-                n_vals.append(n)
-                time_vals.append(np.mean(result[(n,m)]))
+        for alg in algorithms:
+            for (nn, m) in result[alg]:
+                if nn + m == S:
+                    alg_xy[alg][0].append(nn)
+                    alg_xy[alg][1].append(np.mean(result[alg][(nn,m)]))
         plt.figure()
-        plt.plot(n_vals, time_vals)
-        plt.show()
+        for alg in algorithms:
+            plt.scatter(alg_xy[alg][0], alg_xy[alg][1], label=alg)
+        plt.xscale('log')
+        plt.yscale('log')
+        plt.legend()
+        plt.savefig(f"figs/timing_results/S_{S}")
     else:
         raise RuntimeError("Please specify either the number of points on the hull (n) or the total number of poitns (S) to get a sensible plot.")
     
 if __name__ == '__main__':
-    result = timer(['chan', 'graham_scan', 'gift_wrapping'], './hulls')
+    result = timer(['chan', 'graham_scan'], './hulls3')
     print(result)
-    plot_time_results(result, ['chan', 'graham_scan', 'gift_wrapping'], n=20)
+    plot_time_results(result, ['chan', 'graham_scan'], n = 100)
 
 
 

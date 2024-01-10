@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from show_hull import show_hull
 from random_convex_hull import random_convex_hull_with_points
@@ -95,8 +96,14 @@ def main():
     n, m = 10, 100
     points = random_convex_hull_with_points(n, m).points.tolist()
     hull = graham_scan(points)
-    show_hull(np.array(points), np.array(hull))
-    print(hull)
+    for i in range(len(hull)):
+        x = hull[(i+1)%len(hull)]
+        y = hull[(i)%len(hull)]
+        show_hull(np.array(points), np.array(hull))
+        plt.plot([x[0], y[0]], [x[1], y[1]], color='red', linewidth=5)
+        plt.show()
+    #show_hull(np.array(points), np.array(hull))
+    #print(hull)
 
 
 if __name__ == '__main__':

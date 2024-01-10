@@ -42,4 +42,4 @@ def test_algorithm(algorithm, folder):
 
 if __name__ == '__main__':
     #run tests
-    test_algorithm(chan, './hulls')
+    test_algorithm(graham_scan, './special_hulls')

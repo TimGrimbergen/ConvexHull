@@ -24,11 +24,12 @@ def binary_search_hull(hull, point):
 
     if r == 0: return hull[0]
     if r == 1: return hull[1] if left_of(point, hull[0], hull[1])==1 else hull[0]
+    if point == hull[-1]: return hull[0] # hmm
 
     while l <= r: # verify if this REALLY works
         m = l + (r-l)//2
 
-        if left_of(point, hull[m], hull[m-1]) == -1 and left_of(point, hull[m], hull[(m+1)%(len(hull))]) == -1 or l == r:
+        if (left_of(point, hull[m], hull[m-1]) == -1 and left_of(point, hull[m], hull[(m+1)%(len(hull))]) == -1) or l == r:
             return hull[m]
 
         if left_of(point, hull[(m+1)%len(hull)], hull[m]) == 1 and left_of(point, hull[r], hull[m]) == 1:
@@ -43,7 +44,7 @@ def binary_search_hull(hull, point):
     
     return hull[m]
 
-
+#@profile
 def chan(points: list[tuple], m=None):
     """
     Find the convex hull of a set of points using the chan's algorithm.
@@ -80,13 +81,16 @@ def chan(points: list[tuple], m=None):
         for i in range(len(groups)):
             cur_hull = graham_scan(groups[i])
             hulls.append(cur_hull)
-            
+        
+
             
         # Create look_up table for every point
         look_up = {}
         for i in range(len(hulls)):
             for j in range(len(hulls[i])):
                 look_up[hulls[i][j]] = (i,j)
+
+
 
         # DEBUG: plot the subhulls
         #show_hulls([np.array(groups[i]) for i in range(len(groups))], [np.array(hulls[j]) for j in range(len(hulls))])
@@ -142,16 +146,31 @@ def chan(points: list[tuple], m=None):
                 break
 
         m = m*m
+        
+        #for the new points only select those that were part of a convex hull
+        if m > 3:
+            points = [hulls[i][j] for i in range(len(hulls)) for j in range(len(hulls[i]))]
+            n = len(points)
 
 
 def main():
-    n, m = 10, 100
+    n, m = 100, 50000
     true_hull = random_convex_hull_with_points(n, m)
     all_points = true_hull.points.tolist()
     points = [tuple(all_points[i]) for i in range(n+m)]
     true_hull_points = [tuple(x) for x in true_hull.points[true_hull.vertices].tolist()]
-    my_hull = chan(points, None)
-    show_hull(np.array(points), np.array(my_hull))
+    my_hull = chan(points, None) # important line
+    #show_hull(np.array(points), np.array(my_hull))
+
+    #print(my_hull)
+    #for i in range(len(my_hull)):
+    #    if i == 0: print(my_hull[i])
+    #    x = binary_search_hull(my_hull, my_hull[i])
+    #    x = my_hull[(i+1)%len(my_hull)]
+    #    y = my_hull[(i)%len(my_hull)]
+    #   show_hull(np.array(points), np.array(my_hull))
+    #    plt.plot([x[0], y[0]], [x[1], y[1]], color='red', linewidth=5)
+    #    plt.show()
 
 
 if __name__ == '__main__':
