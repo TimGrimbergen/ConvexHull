@@ -90,7 +90,7 @@ def random_convex_hull_with_points(n: int, m: int, rng=None) -> ConvexHull:
 
 
 def main():
-    n, m = 10, 100
+    n, m = 3, 90
     hull = random_convex_hull_with_points(n, m)
     mask = np.ones(len(hull.points), dtype=bool)
     mask[hull.vertices] = False
