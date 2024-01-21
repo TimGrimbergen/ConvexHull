@@ -1,6 +1,7 @@
 from random_convex_hull import *
 from graham_scan import graham_scan
 from gift_wrapping import gift_wrapping
+from chans_algorithm import chan
 
 from scipy.spatial import ConvexHull
 from itertools import groupby
@@ -36,13 +37,13 @@ def main():
 
         seed_gen = np.random.default_rng()
 
-        for n, _ in groupby(np.logspace(1, np.log10(5000), 5, dtype=int)):
-            for k, _ in groupby(np.linspace(3, n, 5, dtype=int)):
-                for _ in range(1):
+        for n, _ in groupby(np.geomspace(3, 5000, 20, dtype=int)):
+            for k, _ in groupby(np.geomspace(3, n, 20, dtype=int)):
+                for _ in range(250):
                     seed = seed_gen.bit_generator.random_raw()
                     rng = np.random.default_rng(seed)
                     correct_hull = random_convex_hull_with_points(k, n-k, rng=rng)
-                    for method in [graham_scan, gift_wrapping]:
+                    for method in [gift_wrapping, graham_scan, chan]:
                         name = method.__name__
                         print(f'n={n}, k={k}, seed={seed}, method={name}')
                         correct, time = test_method(correct_hull, method)
