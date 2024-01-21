@@ -1,8 +1,10 @@
 import random
 import numpy as np
 import os
+from scipy.spatial import ConvexHull
 
 from random_convex_hull import random_convex_hull_with_points
+from show_hull import show_hull
 
 def create_special_hull(points, hull, save_folder):
     n = len(hull)
@@ -53,7 +55,7 @@ def load_hulls(folder, n = None, m = None):
     return hulls
 
 if __name__ == '__main__':
-    #'''
+    '''
     save_folder = "./hulls2"
     S_vals = [5,10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000]
     #n_vals = [10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000, 200000, 400000, 490000, 499500]
@@ -66,12 +68,14 @@ if __name__ == '__main__':
     
     #hulls = load_hulls(save_folder)
     #print(hulls[(5,15)]["980458186"]['hull'])
-    #'''
     '''
-    points = [(0, 0), (1,0), (0.1, 0.1), (0.5, 0.5), (0.3, 0.3), (1, 0.5), (1, 0.3), (0.2, 0), (0.6, 0), 
-              (1,1)]
-    hull = [(0, 0), (1, 1), (1, 0)]
+    #'''
+    #n = 500
+    points = [(81935081390581.0, 8923823859028.0)]
+    hull = [(81935081390581.0, 8923823859028.0)]
+
+    show_hull(np.array(points), np.array(hull))
 
     create_special_hull(points, hull, "./special_hulls")
-    '''
+    #'''
 

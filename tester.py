@@ -16,7 +16,7 @@ def verify_hull(true_hull, candidate_hull):
     except:
         return False
 
-def test_algorithm(algorithm, folder):
+def test_algorithm(algorithm, folder, filter=None):
     # given an algorithm (function from [tuple(x,y)] -> [tuple(x,y)]) and a folder with test cases this function checks if 
     # the algorithm yields the same convex hull vertices as the true_hull for the test case (according to scipy.spatial.ConvexHull)
 
