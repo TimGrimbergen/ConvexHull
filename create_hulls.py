@@ -34,7 +34,6 @@ def create_hulls(N, n, m, save_folder):
 
 def load_hulls(folder, n = None, m = None):
     hulls = {} # store hulls as lists of pairs (poits, hull_points) by (n,m) key
- 
 
     # if needed: make it so only directory (n,m) is selected given input n and m.
     for dir_name in os.listdir(folder):
@@ -54,23 +53,25 @@ def load_hulls(folder, n = None, m = None):
     return hulls
 
 if __name__ == '__main__':
-    '''
-    save_folder = "./hulls3"
-    S_vals = [100,200,500,1000,2000,5000,10000,20000,50000,100000,200000]
+    #'''
+    save_folder = "./hulls2"
+    S_vals = [5,10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000]
     #n_vals = [10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000, 200000, 400000, 490000, 499500]
-    n = 100
+    n = 9
     #S = 500000
-    for S in S_vals:
-        create_hulls(10, n, S-n, save_folder)
+    for s in S_vals:
+        create_hulls(10, n, s-n, save_folder)
     #for n in n_vals:
     #    create_hulls(3, n, S-n, save_folder)
     
     #hulls = load_hulls(save_folder)
     #print(hulls[(5,15)]["980458186"]['hull'])
+    #'''
     '''
     points = [(0, 0), (1,0), (0.1, 0.1), (0.5, 0.5), (0.3, 0.3), (1, 0.5), (1, 0.3), (0.2, 0), (0.6, 0), 
               (1,1)]
     hull = [(0, 0), (1, 1), (1, 0)]
 
     create_special_hull(points, hull, "./special_hulls")
+    '''
 

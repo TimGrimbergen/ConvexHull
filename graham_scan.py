@@ -66,7 +66,7 @@ def graham_scan(points):
     # return p_start, points # debug
 
     stack = []
-    for i, p in enumerate(points):
+    for _, p in enumerate(points):
         while len(stack) > 1 and not right_turn(stack + [p]):
             stack.pop()
         stack.append(p)

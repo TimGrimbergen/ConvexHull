@@ -70,9 +70,9 @@ def plot_time_results(result, algorithms, n = None, S = None):
         raise RuntimeError("Please specify either the number of points on the hull (n) or the total number of poitns (S) to get a sensible plot.")
     
 if __name__ == '__main__':
-    result = timer(['chan', 'graham_scan'], './hulls3')
+    result = timer(['chan', 'graham_scan'], './hulls2')
     print(result)
-    plot_time_results(result, ['chan', 'graham_scan'], n = 100)
+    plot_time_results(result, ['chan', 'graham_scan'], n = 5)
 
 
 
