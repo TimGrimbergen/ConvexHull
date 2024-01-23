@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_by_n(data: pd.DataFrame):
@@ -19,7 +20,7 @@ def plot_by_n(data: pd.DataFrame):
     ax.legend()
     plt.show()
 
-def plot_by_k(data: pd.DataFrame):
+def plot_at_n_5000(data: pd.DataFrame):
     data = data.where(data['n'] == 5000).drop(columns='n')
     data = data.groupby(['k', 'algorithm']).agg({'dt': ['mean', 'std']})
     data = data.reset_index()
@@ -73,10 +74,36 @@ def plot_at_k_3(data: pd.DataFrame):
     plt.show()
 
 
+def plot_3d(data: pd.DataFrame):
+    data = data.groupby(['n', 'k', 'algorithm']).agg({'dt': ['mean', 'std']})
+    data = data.reset_index()
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    for label, df in data.groupby('algorithm'):
+        mean, std = df['dt', 'mean'], df['dt', 'std']
+        ax.plot_trisurf(np.log10(df['n']), np.log10(df['k']), np.log10(mean), label=label, alpha=0.3)
+
+    # Set ticks to be at log-scale intervals
+    ax.xaxis.set_major_locator(plt.MultipleLocator(1))
+    ax.yaxis.set_major_locator(plt.MultipleLocator(1))
+    ax.zaxis.set_major_locator(plt.MultipleLocator(1))
+
+    major_formatter = plt.FuncFormatter(lambda x, pos: f'$10^{{{int(x)}}}$')
+    ax.xaxis.set_major_formatter(major_formatter)
+    ax.yaxis.set_major_formatter(major_formatter)
+    ax.zaxis.set_major_formatter(major_formatter)
+
+    ax.set_xlabel('n')
+    ax.set_ylabel('k')
+    ax.set_zlabel('time (ns)')
+    plt.show()
+
+
 def main():
     data = pd.read_csv('data/data_2024-01-21_15:42:18.csv')
     data = data.drop(columns=['seed', 'correct'])
-    plot_at_k_3(data)
+    plot_3d(data)
 
 
 if __name__ == '__main__':
