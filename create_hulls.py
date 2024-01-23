@@ -46,9 +46,9 @@ def load_hulls(folder, n = None, m = None):
             if id not in hulls[(n,m)]: hulls[(n,m)][id] = {}
 
             if file[:4] == 'hull':
-                hulls[(n,m)][id]['hull'] = np.loadtxt(f"{folder}/{n}_{m}/hull_{id}")
+                hulls[(n,m)][id]['hull'] = np.loadtxt(f"{folder}/{n}_{m}/hull_{id}", ndmin=2)
             elif file[:6] == 'points':
-                hulls[(n,m)][id]['points'] = np.loadtxt(f"{folder}/{n}_{m}/points_{id}") 
+                hulls[(n,m)][id]['points'] = np.loadtxt(f"{folder}/{n}_{m}/points_{id}", ndmin=2) 
             else:
                 raise RuntimeError(f"Unexpcted file ({file}) appears in: {folder}/{dir_name}")
     
@@ -56,23 +56,24 @@ def load_hulls(folder, n = None, m = None):
 
 if __name__ == '__main__':
     '''
-    save_folder = "./hulls2"
-    S_vals = [5,10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000]
-    #n_vals = [10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000, 200000, 400000, 490000, 499500]
-    n = 9
-    #S = 500000
-    for s in S_vals:
-        create_hulls(10, n, s-n, save_folder)
-    #for n in n_vals:
-    #    create_hulls(3, n, S-n, save_folder)
+    save_folder = "./hulls6"
+    #S_vals = [5,10,50,100,500,1000,3000, 6000, 10000, 25000, 50000, 100000]
+    n_vals = [9]
+    #n = 9
+    S = 4304670
+    #for s in S_vals:
+    #    create_hulls(10, n, s-n, save_folder)
+    for n in n_vals:
+        create_hulls(1, n, S-n, save_folder)
     
     #hulls = load_hulls(save_folder)
     #print(hulls[(5,15)]["980458186"]['hull'])
     '''
     #'''
-    #n = 500
-    points = [(81935081390581.0, 8923823859028.0)]
-    hull = [(81935081390581.0, 8923823859028.0)]
+    n = 18
+    points = [(i/n, 0) for i in range(n+1)]
+    hull = [(0.0, 0.0), (1.0, 0.0)]
+    random.shuffle(points)
 
     show_hull(np.array(points), np.array(hull))
 

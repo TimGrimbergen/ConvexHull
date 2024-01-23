@@ -26,7 +26,7 @@ def binary_search_hull(hull, point):
     if r == 1: return hull[1] if left_of(point, hull[0], hull[1])==1 else hull[0]
     if point == hull[-1]: return hull[0] # hmm
 
-    while l <= r: # verify if this REALLY works
+    while l <= r: 
         m = l + (r-l)//2
 
         if (left_of(point, hull[m], hull[m-1]) == -1 and left_of(point, hull[m], hull[(m+1)%(len(hull))]) == -1) or l == r:
@@ -61,7 +61,7 @@ def chan(points: list[tuple], m=None):
     if n <= 2: return points
 
     # number of subsets for partitioning the points, also equal to number of points on convex hull
-    m = 5 if not m else m 
+    m = 3 if not m else m 
     #np.random.shuffle(points)
 
     while True:
@@ -70,7 +70,7 @@ def chan(points: list[tuple], m=None):
         for i in range(n):
             groups[i//m].append(points[i])
 
-        # DEBUG: plot the groups
+        #DEBUG: plot the groups
         #plt.figure()
         #for i in range(len(groups)):
         #    plt.scatter( [groups[i][j][0] for j in range(len(groups[i]))],
@@ -106,17 +106,20 @@ def chan(points: list[tuple], m=None):
             # Now for each group, we need the "steepest tangent", i.e., we need to find the vertices of the subhulls such that all
             # other vertices of the subhulls lie on the right side of the directed line from last convex hull point to the new vertex.
             # Since the subhulls are stored in clockwise sorted order, we can perform binary search to do this.
-            extreme_points = []
             for i in range(len(hulls)):
                 if i == cur_hull: continue #handled separately
 
                 #binary search for next point on every hull
-                cur_extreme_point = binary_search_hull(hulls[i], point_on_hull) # this sorta work
+                cur_extreme_point = binary_search_hull(hulls[i], point_on_hull) # this sorta works
 
                 is_right = left_of(point_on_hull, cur_extreme_point, cur_most_extreme)
 
                 if is_right == -1 or (is_right == 0 and dist(cur_extreme_point, point_on_hull) > dist(cur_most_extreme, point_on_hull)):
-                    cur_most_extreme = cur_extreme_point
+                    #extra check for if we still encounter three colinear points! If that is the case, just repick the most recent point on the hull
+                    if len(hull) >= 2 and left_of(hull[-2], point_on_hull, cur_extreme_point) == 0: 
+                        cur_most_extreme = point_on_hull
+                    else:
+                        cur_most_extreme = cur_extreme_point
 
                 #print(look_up[cur_extreme_point])
                 #extreme_points.append(cur_extreme_point)
@@ -140,12 +143,12 @@ def chan(points: list[tuple], m=None):
                 #print(f"Couldn't find hull of size {m}, will now try with {m*m}")
                 break
 
-        m = m*m
-        
         #for the new points only select those that were part of a convex hull
         if m > 3:
             points = [hulls[i][j] for i in range(len(hulls)) for j in range(len(hulls[i]))]
             n = len(points)
+
+        m = m*m
 
 
 def main():

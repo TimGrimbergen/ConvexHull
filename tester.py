@@ -31,15 +31,22 @@ def test_algorithm(algorithm, folder, filter=None):
                 try:
                     print(colored(f"Check PASSED for id: {id}", color='green'))
                 except:
-                    print()
+                    print(f"Check PASSED for id: {id}")
             else:
                 try:
-                    print(colored(f"Check FAILED for id: {id}", color='red'))
+                    print(colored(f"Check FAILED for id: {id} || computed hull was: {my_hull}", color='red'))
                 except:
-                    print()
+                    print(f"Check FAILED for id: {id} || computed hull was: {my_hull}")
 
 
 
 if __name__ == '__main__':
-    #run tests
+    #run tests on special hulls
     test_algorithm(chan, './special_hulls')
+    test_algorithm(gift_wrapping, './special_hulls')
+    test_algorithm(graham_scan, './special_hulls')
+
+    #run tests on randomly generated hulls
+    #test_algorithm(chan, './hulls5')
+    #test_algorithm(gift_wrapping, './hulls5')
+    #test_algorithm(graham_scan, './hulls5')
