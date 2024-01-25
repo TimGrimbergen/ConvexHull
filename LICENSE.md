@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2024 Tim Grimberge, Timo Post
+Copyright (c) 2024 Tim Grimbergen & Timo Post
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
