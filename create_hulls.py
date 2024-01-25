@@ -70,9 +70,9 @@ if __name__ == '__main__':
     #print(hulls[(5,15)]["980458186"]['hull'])
     '''
     #'''
-    n = 18
-    points = [(i/n, 0) for i in range(n+1)]
-    hull = [(0.0, 0.0), (1.0, 0.0)]
+    n = 10
+    points = [(i/n, 1) for i in range(n+1)] + [(i/n, -1) for i in range(n+1)] + [(np.random.uniform(0,1), np.random.uniform(-1, 1)) for _ in range(100)]
+    hull = [(0.0, 1.0), (1.0, 1.0), (1.0, -1.0), (0.0, -1.0)]
     random.shuffle(points)
 
     show_hull(np.array(points), np.array(hull))
