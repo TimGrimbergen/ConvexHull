@@ -20,7 +20,7 @@ python3 tester.py
 ```
 The folder should be entered in the script itself and should contain subfolders with names "k_n", where $k$ is the number of vertices on the
 convex hull and $n$ is the number of points in the interior. Inside each subfolder "k_n", two files should be provided, one storing the coordinates of
-the hull vertices and one storing the interior points. These files are named $hull\_123456789$ and $points\_123456789$ respectively. Multiple of these 
+the hull vertices and one storing the interior points. These files are named hull\_123456789 and points\_123456789 respectively. Multiple of these 
 combinations can exist in one subdirectory but the 9 digit codes should be unique for different test cases.
 
 The following command can be used to time the algorithms:
