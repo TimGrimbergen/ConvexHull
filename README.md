@@ -7,7 +7,7 @@ We implemented three convex hull algorithms: Jarvis March, Graham Scan and Chan'
 
 Simply clone this repository and pip install all required dependencies: numpy, matplotlib, random and scipy. 
 
-## Test cripts & Test cases
+## Test scripts & Test cases
 
 Several test scripts and test cases are created to analyze the correctness and performance of the various algorithms.
 
@@ -20,12 +20,12 @@ python3 tester.py
 ```
 The folder should be entered in the script itself and should contain subfolders with names "k_n", where $k$ is the number of vertices on the
 convex hull and $n$ is the number of points in the interior. Inside each subfolder "k_n", two files should be provided, one storing the coordinates of
-the hull vertices and one storing the interior points. These files are named $hull_123456789$ and $points_123456789$ respectively. Multiple of these 
+the hull vertices and one storing the interior points. These files are named $hull\_123456789$ and $points\_123456789$ respectively. Multiple of these 
 combinations can exist in one subdirectory but the 9 digit codes should be unique for different test cases.
 
-The following command times the algorithms:
+The following command can be used to time the algorithms:
 ```
-python3 timer.py
+python3 run_tests.py
 ```
 The algorithms and folder containing the hulls should again be provided in the script itself.
 
@@ -40,7 +40,7 @@ requires the hull vertices and points to be entered manually.
 ## Authors
 
 * **Tim Grimbergen** (t.grimbergen@students.uu.nl)
-* **Time Post** (t.f.post@students.uu.nl)
+* **Timo Post** (t.f.post@students.uu.nl)
 
 ## License
 
