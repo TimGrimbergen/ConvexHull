@@ -23,6 +23,7 @@ def gift_wrapping(points: list[tuple]) -> list[tuple]:
     """
     # Find the leftmost point. If there are several leftmost points, pick the
     # one with the lowest y-coordinate.
+
     point_on_hull = min(points)
 
     hull = []

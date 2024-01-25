@@ -16,7 +16,7 @@ def verify_hull(true_hull, candidate_hull):
     except:
         return False
 
-def test_algorithm(algorithm, folder):
+def test_algorithm(algorithm, folder, filter=None):
     # given an algorithm (function from [tuple(x,y)] -> [tuple(x,y)]) and a folder with test cases this function checks if 
     # the algorithm yields the same convex hull vertices as the true_hull for the test case (according to scipy.spatial.ConvexHull)
 
@@ -31,15 +31,22 @@ def test_algorithm(algorithm, folder):
                 try:
                     print(colored(f"Check PASSED for id: {id}", color='green'))
                 except:
-                    print()
+                    print(f"Check PASSED for id: {id}")
             else:
                 try:
-                    print(colored(f"Check FAILED for id: {id}", color='red'))
+                    print(colored(f"Check FAILED for id: {id} || computed hull was: {my_hull}", color='red'))
                 except:
-                    print()
+                    print(f"Check FAILED for id: {id} || computed hull was: {my_hull}")
 
 
 
 if __name__ == '__main__':
-    #run tests
+    #run tests on special hulls
+    test_algorithm(chan, './special_hulls')
+    test_algorithm(gift_wrapping, './special_hulls')
     test_algorithm(graham_scan, './special_hulls')
+
+    #run tests on randomly generated hulls
+    #test_algorithm(chan, './hulls5')
+    #test_algorithm(gift_wrapping, './hulls5')
+    #test_algorithm(graham_scan, './hulls5')
